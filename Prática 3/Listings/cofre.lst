@@ -1,0 +1,206 @@
+C51 COMPILER V9.60.7.0   COFRE                                                             06/05/2026 19:29:52 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE COFRE
+OBJECT MODULE PLACED IN .\Objects\cofre.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE cofre.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\cof
+                    -re.lst) TABS(2) OBJECT(.\Objects\cofre.obj)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          
+   3          sfr LCD_Port = 0x90;        /* P1 port as data port */
+   4          sbit rs = P1^3;             /* Register select pin */
+   5          sbit rw = P1^1;             /* Read/Write pin */
+   6          sbit en = P1^2;             /* Enable pin */
+   7          
+   8          //Linhas
+   9          sbit R0 = P0^3;
+  10          sbit R1 = P0^2;
+  11          sbit R2 = P0^1;
+  12          sbit R3 = P0^0;
+  13          
+  14          //Colunas 
+  15          sbit C0 = P0^6;
+  16          sbit C1 = P0^5;
+  17          sbit C2 = P0^4;
+  18          
+  19          /* Function to provide delay Approx 1ms with 11.0592 Mhz crystal */
+  20          void delay(unsigned int count)
+  21          {
+  22   1          int i, j;
+  23   1          for(i=0; i<count; i++)
+  24   1              for(j=0; j<112; j++);
+  25   1      }
+  26          
+  27          /* LCD16x2 command function */
+  28          void LCD_Command(char cmnd) 
+  29          {
+  30   1          LCD_Port = (LCD_Port & 0x0F) | (cmnd & 0xF0); /* Send upper nibble */
+  31   1          rs = 0;                 /* Command reg. */
+  32   1          rw = 0;                 /* Write operation */
+  33   1          en = 1;                 /* Enable pulse */
+  34   1          delay(1);
+  35   1          en = 0;
+  36   1          delay(2);
+  37   1          LCD_Port = (LCD_Port & 0x0F) | (cmnd << 4);   /* Send lower nibble */
+  38   1          en = 1;                 /* Enable pulse */
+  39   1          delay(1);
+  40   1          en = 0;
+  41   1          delay(5);
+  42   1      }
+  43          
+  44          /* LCD data write function */
+  45          void LCD_Char(char char_data) 
+  46          {
+  47   1          LCD_Port = (LCD_Port & 0x0F) | (char_data & 0xF0); /* Send upper nibble */
+  48   1          rs = 1;                 /* Data reg. */
+  49   1          rw = 0;                 /* Write operation */
+  50   1          en = 1;                 /* Enable pulse */
+  51   1          delay(1);
+  52   1          en = 0;
+  53   1          delay(2);
+  54   1          LCD_Port = (LCD_Port & 0x0F) | (char_data << 4);   /* Send lower nibble */
+C51 COMPILER V9.60.7.0   COFRE                                                             06/05/2026 19:29:52 PAGE 2   
+
+  55   1          en = 1;                 /* Enable pulse */
+  56   1          delay(1);
+  57   1          en = 0;
+  58   1          delay(5);
+  59   1      }
+  60          
+  61          /* Send string to LCD function */
+  62          void LCD_String(char *str) 
+  63          {
+  64   1          int i;
+  65   1          for(i=0; str[i]!=0; i++) /* Send each char of string till the NULL */
+  66   1          {
+  67   2              LCD_Char(str[i]);    /* Call LCD data write */
+  68   2          }
+  69   1      }
+  70          
+  71          /* Send string to LCD function based on X,Y position */
+  72          void LCD_String_xy(char row, char pos, char *str) 
+  73          {
+  74   1          if (row == 0)
+  75   1              LCD_Command((pos & 0x0F) | 0x80);
+  76   1          else if (row == 1)
+  77   1              LCD_Command((pos & 0x0F) | 0xC0);
+  78   1          
+  79   1          LCD_String(str);         /* Call LCD string function */
+  80   1      }
+  81          
+  82          /* LCD Initialize function */
+  83          void LCD_Init(void) 
+  84          {
+  85   1          delay(20);               /* LCD Power ON Initialization time >15ms */
+  86   1          LCD_Command(0x02);       /* 4bit mode */
+  87   1          LCD_Command(0x28);       /* Initialization of 16X2 LCD in 4bit mode */
+  88   1          LCD_Command(0x0C);       /* Display ON Cursor OFF */
+  89   1          LCD_Command(0x06);       /* Auto Increment cursor */
+  90   1          LCD_Command(0x01);       /* Clear display */
+  91   1          LCD_Command(0x80);       /* Cursor at home position */
+  92   1      }
+  93          
+  94          char wait_release(char key) {
+  95   1          while(C0 == 0 || C1 == 0 || C2 == 0); 
+  96   1          delay(20); 
+  97   1          return key;
+  98   1      }
+  99          
+ 100          //Varredura do teclado 
+ 101          char ScanKey() {
+ 102   1          while(1) {
+ 103   2              //Linha 0 
+ 104   2              R0 = 0; 
+ 105   2              R1 = 1; 
+ 106   2              R2 = 1; 
+ 107   2              R3 = 1;
+ 108   2            
+ 109   2              if(C0 == 0) return wait_release('1');
+ 110   2              if(C1 == 0) return wait_release('2');
+ 111   2              if(C2 == 0) return wait_release('3');
+ 112   2      
+ 113   2              //Linha 1 
+ 114   2              R0 = 1; 
+ 115   2              R1 = 0; 
+ 116   2              R2 = 1; 
+C51 COMPILER V9.60.7.0   COFRE                                                             06/05/2026 19:29:52 PAGE 3   
+
+ 117   2              R3 = 1;
+ 118   2            
+ 119   2              if(C0 == 0) return wait_release('4');
+ 120   2              if(C1 == 0) return wait_release('5');
+ 121   2              if(C2 == 0) return wait_release('6');
+ 122   2      
+ 123   2              //Linha 2 
+ 124   2              R0 = 1; 
+ 125   2              R1 = 1; 
+ 126   2              R2 = 0; 
+ 127   2              R3 = 1;
+ 128   2              
+ 129   2              if(C0 == 0) return wait_release('7');
+ 130   2              if(C1 == 0) return wait_release('8');
+ 131   2              if(C2 == 0) return wait_release('9');
+ 132   2      
+ 133   2              //Linha 3 
+ 134   2              R0 = 1; 
+ 135   2              R1 = 1; 
+ 136   2              R2 = 1; 
+ 137   2              R3 = 0;
+ 138   2              
+ 139   2              if(C0 == 0) return wait_release('*');
+ 140   2              if(C1 == 0) return wait_release('0');
+ 141   2              if(C2 == 0) return wait_release('#');
+ 142   2          }
+ 143   1      }
+ 144          
+ 145          void main()
+ 146          {
+ 147   1        char password[5] = "1234"; 
+ 148   1        char input[5];
+ 149   1        int i, match;
+ 150   1      
+ 151   1        LCD_Init(); 
+ 152   1        LCD_String_xy(0, 0, "Enter PIN:");
+ 153   1      
+ 154   1        for(i = 0; i < 4; i++) {
+ 155   2          input[i] = ScanKey();
+ 156   2          LCD_Char('*'); 
+ 157   2        }
+ 158   1        input[4] = '\0'; 
+ 159   1      
+ 160   1        //Verifica a senha 
+ 161   1        match = 1;
+ 162   1        for(i = 0; i < 4; i++) {
+ 163   2          if(input[i] != password[i]) {
+ 164   3            match = 0; 
+ 165   3            break;
+ 166   3          }
+ 167   2        }
+ 168   1          
+ 169   1        LCD_Command(0xC0); //Segunda linha
+ 170   1        if(match == 1) {
+ 171   2          LCD_String_xy(1, 0, "Access Granted ");
+ 172   2        } 
+ 173   1        else {
+ 174   2          LCD_String_xy(1, 0, "Access Denied  ");
+ 175   2        }
+ 176   1      }
+
+
+C51 COMPILER V9.60.7.0   COFRE                                                             06/05/2026 19:29:52 PAGE 4   
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    521    ----
+   CONSTANT SIZE    =     48    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      22
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

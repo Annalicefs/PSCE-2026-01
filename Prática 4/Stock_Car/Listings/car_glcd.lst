@@ -1,0 +1,218 @@
+C51 COMPILER V9.60.7.0   CAR_GLCD                                                          05/27/2026 00:20:40 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE CAR_GLCD
+OBJECT MODULE PLACED IN .\Objects\car_glcd.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\..\..\..\pratica4-20260517T191259Z-3-001\pratica4\car_glcd.c OPTIMIZE
+                    -(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\car_glcd.lst) TABS(2) OBJECT(.\Objects\car_glcd.obj)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          #define GlcdDataBus P3 
+   3          sbit rs  = P2^0; 
+   4          sbit rw  = P2^1; 
+   5          sbit en  = P2^2; 
+   6          sbit psb = P2^3;       
+   7          sbit rst = P2^5; 
+   8          
+   9          //botao 4
+  10          sbit row_left = P0^2;  
+  11          sbit col_left = P0^6; 
+  12          
+  13          //botao 6
+  14          sbit row_right = P0^2;  
+  15          sbit col_right = P0^4; 
+  16          
+  17          char counter = 0;
+  18          char speed = 20;
+  19          
+  20          void delay(unsigned int count) {
+  21   1          int i, j;
+  22   1          for(i=0; i<count; i++) for(j=0; j<112; j++);
+  23   1      }
+  24          
+  25          void GLCD_Command(unsigned char cmnd) {
+  26   1          rs = 0; 
+  27   1          rw = 0; 
+  28   1          GlcdDataBus = cmnd; 
+  29   1          en = 1; 
+  30   1          delay(1); 
+  31   1          en = 0; 
+  32   1          delay(1);
+  33   1      }
+  34          
+  35          void GLCD_Char(unsigned char dat) {
+  36   1          rs = 1; 
+  37   1          rw = 0; 
+  38   1          GlcdDataBus = dat; 
+  39   1          en = 1; 
+  40   1          delay(1); 
+  41   1          en = 0; 
+  42   1          delay(1);
+  43   1      }
+  44          
+  45          void GLCD_ClearGraphic() {
+  46   1          unsigned char y, x;
+  47   1          GLCD_Command(0x34); 
+  48   1          
+  49   1          for(y = 0; y < 32; y++) {
+  50   2            GLCD_Command(0x80 | y);
+  51   2            GLCD_Command(0x80);
+  52   2            for(x = 0; x < 16; x++) {
+  53   3              GLCD_Char(0x00);
+  54   3              GLCD_Char(0x00);
+C51 COMPILER V9.60.7.0   CAR_GLCD                                                          05/27/2026 00:20:40 PAGE 2   
+
+  55   3            }
+  56   2          }
+  57   1          GLCD_Command(0x36); 
+  58   1      }
+  59          
+  60          void GLCD_Init(void) {
+  61   1          psb = 1;
+  62   1          rst = 0;
+  63   1          delay(20);              
+  64   1          rst = 1;
+  65   1          GLCD_Command(0x30);       
+  66   1          GLCD_Command(0x0C);       
+  67   1          GLCD_Command(0x06);       
+  68   1          GLCD_Command(0x01); 
+  69   1      }
+  70          
+  71          //Inicio implementacao stock car
+  72          unsigned char code car_player[32] = {
+  73              0x03,0xC0, 0x07,0xE0, 0x0F,0xF0, 0x1B,0xD8, 
+  74              0x1F,0xF8, 0x1B,0xD8, 0x0F,0xF0, 0x0F,0xF0,
+  75              0x0F,0xF0, 0x0F,0xF0, 0x1F,0xF8, 0x1B,0xD8,
+  76              0x1F,0xF8, 0x0F,0xF0, 0x07,0xE0, 0x03,0xC0
+  77          };
+  78          
+  79          unsigned char code car_enemy[32] = {
+  80              0x03,0xC0, 0x07,0xE0, 0x0F,0xF0, 0x1F,0xF8, 
+  81              0x1F,0xF8, 0x1F,0xF8, 0x0F,0xF0, 0x0F,0xF0,
+  82              0x0F,0xF0, 0x0F,0xF0, 0x1F,0xF8, 0x1F,0xF8,
+  83              0x1F,0xF8, 0x0F,0xF0, 0x07,0xE0, 0x03,0xC0
+  84          };
+  85          
+  86          unsigned char code wall[32] = {
+  87              0xFF,0xFF, 0xFF,0xFF, 0xFF,0xFF, 0xFF,0xFF, 
+  88              0x00,0x00, 0x00,0x00, 0x00,0x00, 0x00,0x00, 
+  89              0xFF,0xFF, 0xFF,0xFF, 0xFF,0xFF, 0xFF,0xFF, 
+  90              0x00,0x00, 0x00,0x00, 0x00,0x00, 0x00,0x00  
+  91          };
+  92          
+  93          unsigned char code blank[32] = {
+  94              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  95              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+  96          };
+  97          
+  98          char read_btn_left(){
+  99   1          col_left = 1;      
+ 100   1          row_left = 0;    
+ 101   1          
+ 102   1          if(col_left == 0){ 
+ 103   2            row_left =1;
+ 104   2              return 1;
+ 105   2          }
+ 106   1          row_left =1;
+ 107   1          return 0;
+ 108   1      }
+ 109          
+ 110          char read_btn_right(){
+ 111   1          col_right = 1;       
+ 112   1          row_right = 0;     
+ 113   1          
+ 114   1          if(col_right == 0){ 
+ 115   2            row_right = 1;
+ 116   2              return 1;
+C51 COMPILER V9.60.7.0   CAR_GLCD                                                          05/27/2026 00:20:40 PAGE 3   
+
+ 117   2          }
+ 118   1          row_right = 1;
+ 119   1          return 0;
+ 120   1      }
+ 121          
+ 122          void Draw_Sprite(char lane, char y, unsigned char code *sprite) {
+ 123   1          char i;
+ 124   1          GLCD_Command(0x36);
+ 125   1          
+ 126   1          for(i = 0; i < 16; i++) {
+ 127   2              char draw_y = y + i;
+ 128   2              if(draw_y > 63) break;
+ 129   2                   
+ 130   2              if(draw_y < 32) {
+ 131   3                  GLCD_Command(0x80 | draw_y);
+ 132   3                  GLCD_Command(0x80 | lane);
+ 133   3              } else {
+ 134   3                  GLCD_Command(0x80 | (draw_y - 32));
+ 135   3                  GLCD_Command(0x88 | lane); 
+ 136   3              }
+ 137   2              
+ 138   2              GLCD_Char(sprite[i*2]);     
+ 139   2              GLCD_Char(sprite[i*2 + 1]); 
+ 140   2          }
+ 141   1      }
+ 142          
+ 143          void main() {
+ 144   1          char p_lane = 3;  //meio da pista
+ 145   1          char e_lane = 2; 
+ 146   1          char e_y = 0;    
+ 147   1          int i;
+ 148   1      
+ 149   1          GLCD_Init();
+ 150   1        
+ 151   1          //bordas da pista
+ 152   1          for(i = 0; i < 64; i += 16) {
+ 153   2              Draw_Sprite(0, i, wall); 
+ 154   2              Draw_Sprite(7, i, wall);
+ 155   2          }
+ 156   1          
+ 157   1          while(1) {
+ 158   2              counter++;
+ 159   2              
+ 160   2              //apaga posicao antiga
+ 161   2              Draw_Sprite(p_lane, 48, blank);
+ 162   2              Draw_Sprite(e_lane, e_y, blank);
+ 163   2              
+ 164   2              //leitura dos botoes
+ 165   2              if(read_btn_left() == 1 && p_lane > 1) p_lane--;
+ 166   2              if(read_btn_right() == 1 && p_lane < 6) p_lane++;
+ 167   2              
+ 168   2              //carro inimigo
+ 169   2              e_y += 2;
+ 170   2            
+ 171   2              if(e_y >= 64) {
+ 172   3                  e_y = 0;                               
+ 173   3                  e_lane = (counter % 6) + 1; 
+ 174   3              }
+ 175   2              
+ 176   2              Draw_Sprite(p_lane, 48, car_player); 
+ 177   2              Draw_Sprite(e_lane, e_y, car_enemy);
+ 178   2              
+C51 COMPILER V9.60.7.0   CAR_GLCD                                                          05/27/2026 00:20:40 PAGE 4   
+
+ 179   2              // colisao
+ 180   2              if(e_lane == p_lane && e_y >= 32 && e_y <= 64) {
+ 181   3                  delay(200);
+ 182   3                  GLCD_ClearGraphic(); 
+ 183   3                  while(1); 
+ 184   3              }   
+ 185   2              
+ 186   2              delay(speed);
+ 187   2          }
+ 188   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    519    ----
+   CONSTANT SIZE    =    128    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2      11
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

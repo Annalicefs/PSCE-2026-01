@@ -1,0 +1,3 @@
+".\Objects\tRex_glcd.obj" 
+TO ".\Objects\GLCD" 
+PRINT(".\Listings\GLCD.m51")

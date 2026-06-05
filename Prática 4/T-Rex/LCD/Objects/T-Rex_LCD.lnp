@@ -1,0 +1,3 @@
+".\Objects\tRex_LCD.obj" 
+TO ".\Objects\T-Rex_LCD" 
+PRINT(".\Listings\T-Rex_LCD.m51")

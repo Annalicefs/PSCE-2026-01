@@ -1,0 +1,459 @@
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    05/26/2026  22:14:57  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0, INVOKED BY:
+D:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\tRex_glcd.obj TO .\Objects\GLCD PRINT (.\Listings\GLCD.m51)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\tRex_glcd.obj (TREX_GLCD)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C_STARTUP)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C?CLDOPTR)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C?UIDIV)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  .\Objects\GLCD (TREX_GLCD)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0011H     UNIT         ?DT?TREX_GLCD
+            DATA    0019H     000FH     UNIT         _DATA_GROUP_
+            IDATA   0028H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     07FDH                  *** GAP ***
+            CODE    0800H     0100H     UNIT         ?PR?MAIN?TREX_GLCD
+            CODE    0900H     008EH     UNIT         ?PR?LOAD_CUSTOM_CHAR?TREX_GLCD
+            CODE    098EH     008CH     UNIT         ?C_C51STARTUP
+            CODE    0A1AH     0082H     UNIT         ?C?LIB_CODE
+            CODE    0A9CH     006DH     UNIT         ?PR?CHECK_NEW_OBSTACLE?TREX_GLCD
+            CODE    0B09H     006BH     UNIT         ?CO?TREX_GLCD
+            CODE    0B74H     006AH     UNIT         ?PR?DRAW_OBSTACLES?TREX_GLCD
+            CODE    0BDEH     004FH     UNIT         ?PR?DRAW_STATUS?TREX_GLCD
+            CODE    0C2DH     0045H     UNIT         ?PR?UPDATE_OBSTACLES?TREX_GLCD
+            CODE    0C72H     002EH     UNIT         ?PR?_GLCD_STRING_XY?TREX_GLCD
+            CODE    0CA0H     002CH     UNIT         ?PR?_DRAW_DINO?TREX_GLCD
+            CODE    0CCCH     002BH     UNIT         ?PR?_GLCD_STRING?TREX_GLCD
+            CODE    0CF7H     002AH     UNIT         ?PR?_DELAY?TREX_GLCD
+            CODE    0D21H     0026H     UNIT         ?C_INITSEG
+            CODE    0D47H     0021H     UNIT         ?PR?GLCD_INIT?TREX_GLCD
+            CODE    0D68H     0015H     UNIT         ?PR?_GLCD_CHAR?TREX_GLCD
+            CODE    0D7DH     0011H     UNIT         ?PR?READ_BUTTON?TREX_GLCD
+            CODE    0D8EH     000BH     UNIT         ?PR?_GLCD_COMMAND?TREX_GLCD
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\GLCD (TREX_GLCD)
+
+
+SEGMENT                                    DATA_GROUP 
+  +--> CALLED SEGMENT                    START    LENGTH
+--------------------------------------------------------
+?C_C51STARTUP                            -----    -----
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  05/26/2026  22:14:57  PAGE 2
+
+
+  +--> ?PR?MAIN?TREX_GLCD
+  +--> ?C_INITSEG
+
+?PR?MAIN?TREX_GLCD                       0019H    0004H
+  +--> ?PR?GLCD_INIT?TREX_GLCD
+  +--> ?PR?LOAD_CUSTOM_CHAR?TREX_GLCD
+  +--> ?PR?_DRAW_DINO?TREX_GLCD
+  +--> ?PR?CHECK_NEW_OBSTACLE?TREX_GLCD
+  +--> ?PR?UPDATE_OBSTACLES?TREX_GLCD
+  +--> ?PR?DRAW_OBSTACLES?TREX_GLCD
+  +--> ?PR?DRAW_STATUS?TREX_GLCD
+  +--> ?PR?_DELAY?TREX_GLCD
+  +--> ?PR?_GLCD_COMMAND?TREX_GLCD
+  +--> ?CO?TREX_GLCD
+  +--> ?PR?_GLCD_STRING_XY?TREX_GLCD
+  +--> ?PR?READ_BUTTON?TREX_GLCD
+
+?PR?GLCD_INIT?TREX_GLCD                  -----    -----
+  +--> ?PR?_DELAY?TREX_GLCD
+  +--> ?PR?_GLCD_COMMAND?TREX_GLCD
+
+?PR?_GLCD_COMMAND?TREX_GLCD              -----    -----
+  +--> ?PR?_DELAY?TREX_GLCD
+
+?PR?LOAD_CUSTOM_CHAR?TREX_GLCD           001DH    0002H
+  +--> ?PR?_GLCD_COMMAND?TREX_GLCD
+  +--> ?CO?TREX_GLCD
+  +--> ?PR?_GLCD_CHAR?TREX_GLCD
+
+?PR?_GLCD_CHAR?TREX_GLCD                 -----    -----
+  +--> ?PR?_GLCD_COMMAND?TREX_GLCD
+  +--> ?PR?_DELAY?TREX_GLCD
+
+?PR?_DRAW_DINO?TREX_GLCD                 -----    -----
+  +--> ?PR?_GLCD_CHAR?TREX_GLCD
+  +--> ?PR?_GLCD_COMMAND?TREX_GLCD
+
+?PR?UPDATE_OBSTACLES?TREX_GLCD           -----    -----
+  +--> ?PR?_GLCD_CHAR?TREX_GLCD
+
+?PR?DRAW_OBSTACLES?TREX_GLCD             -----    -----
+  +--> ?PR?_GLCD_COMMAND?TREX_GLCD
+  +--> ?PR?_GLCD_CHAR?TREX_GLCD
+
+?PR?DRAW_STATUS?TREX_GLCD                001DH    0006H
+  +--> ?PR?_GLCD_COMMAND?TREX_GLCD
+  +--> ?PR?_GLCD_STRING?TREX_GLCD
+
+?PR?_GLCD_STRING?TREX_GLCD               0023H    0005H
+  +--> ?PR?_GLCD_CHAR?TREX_GLCD
+
+?PR?_GLCD_STRING_XY?TREX_GLCD            001DH    0005H
+  +--> ?PR?_GLCD_COMMAND?TREX_GLCD
+  +--> ?PR?_GLCD_STRING?TREX_GLCD
+
+
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  05/26/2026  22:14:57  PAGE 3
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\GLCD (TREX_GLCD)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        TREX_GLCD
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  D:0008H         PUBLIC        counter
+  C:0B34H         PUBLIC        cacto
+  C:0D47H         PUBLIC        GLCD_Init
+  C:0D01H         PUBLIC        _delay
+  D:0009H         PUBLIC        distancia_minima
+  D:000AH         PUBLIC        velocidade
+  C:0D7DH         PUBLIC        read_button
+  D:000BH         PUBLIC        score
+  C:0900H         PUBLIC        load_custom_char
+  C:0800H         PUBLIC        main
+  C:0C2DH         PUBLIC        update_obstacles
+  C:0BDEH         PUBLIC        draw_status
+  C:0CA0H         PUBLIC        _draw_dino
+  C:0B54H         PUBLIC        ave
+  C:0D8EH         PUBLIC        _GLCD_Command
+  B:0080H.5       PUBLIC        col_button
+  D:000DH         PUBLIC        pulo
+  D:000EH         PUBLIC        fase_pulo
+  D:000FH         PUBLIC        obstaculos
+  D:0015H         PUBLIC        proximo_obstaculo
+  B:00A0H.3       PUBLIC        psb
+  C:0C72H         PUBLIC        _GLCD_String_xy
+  C:0B14H         PUBLIC        dinossauro
+  B:00A0H.2       PUBLIC        en
+  C:0B74H         PUBLIC        draw_obstacles
+  B:0080H.2       PUBLIC        row_button
+  B:00A0H.5       PUBLIC        rst
+  C:0A9CH         PUBLIC        check_new_obstacle
+  D:0016H         PUBLIC        botao_anterior
+  B:00A0H.0       PUBLIC        rs
+  B:00A0H.1       PUBLIC        rw
+  C:0CCCH         PUBLIC        _GLCD_String
+  D:0017H         PUBLIC        prox_fase_vel
+  C:0D72H         PUBLIC        _GLCD_Char
+  -------         PROC          L?0097
+  -------         ENDPROC       L?0097
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        count
+  -------         DO            
+  D:0004H         SYMBOL        i
+  D:0002H         SYMBOL        j
+  -------         ENDDO         
+  C:0D01H         LINE#         24
+  C:0D01H         LINE#         26
+  C:0D0BH         LINE#         27
+  C:0D20H         LINE#         28
+  -------         ENDPROC       _DELAY
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  05/26/2026  22:14:57  PAGE 4
+
+
+  -------         PROC          _GLCD_COMMAND
+  D:0007H         SYMBOL        cmnd
+  C:0D8EH         LINE#         30
+  C:0D8EH         LINE#         31
+  C:0D90H         LINE#         32
+  C:0D90H         LINE#         33
+  C:0D90H         LINE#         34
+  C:0D90H         LINE#         35
+  C:0D93H         LINE#         36
+  C:0D95H         LINE#         37
+  -------         ENDPROC       _GLCD_COMMAND
+  C:0D68H         SYMBOL        L?0095
+  C:0D6BH         SYMBOL        L?0096
+  -------         PROC          L?0094
+  -------         ENDPROC       L?0094
+  C:0D68H         SYMBOL        L?0095
+  C:0D6BH         SYMBOL        L?0096
+  -------         PROC          _GLCD_CHAR
+  D:0007H         SYMBOL        char_data
+  C:0D72H         LINE#         40
+  C:0D72H         LINE#         41
+  C:0D74H         LINE#         42
+  C:0D74H         LINE#         43
+  C:0D74H         LINE#         44
+  C:0D74H         LINE#         45
+  C:0D77H         LINE#         46
+  C:0D79H         LINE#         47
+  -------         ENDPROC       _GLCD_CHAR
+  -------         PROC          _GLCD_STRING
+  D:0023H         SYMBOL        str
+  -------         DO            
+  D:0026H         SYMBOL        i
+  -------         ENDDO         
+  C:0CCCH         LINE#         50
+  C:0CD2H         LINE#         52
+  C:0CE9H         LINE#         53
+  C:0CE9H         LINE#         54
+  C:0CECH         LINE#         55
+  C:0CF6H         LINE#         56
+  -------         ENDPROC       _GLCD_STRING
+  -------         PROC          _GLCD_STRING_XY
+  D:001DH         SYMBOL        row
+  D:001EH         SYMBOL        pos
+  D:001FH         SYMBOL        str
+  C:0C72H         LINE#         58
+  C:0C7CH         LINE#         59
+  C:0C80H         LINE#         60
+  C:0C88H         LINE#         61
+  C:0C8DH         LINE#         62
+  C:0C97H         LINE#         64
+  -------         ENDPROC       _GLCD_STRING_XY
+  -------         PROC          GLCD_INIT
+  C:0D47H         LINE#         67
+  C:0D47H         LINE#         68
+  C:0D49H         LINE#         69
+  C:0D4BH         LINE#         70
+  C:0D52H         LINE#         71
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  05/26/2026  22:14:57  PAGE 5
+
+
+  C:0D54H         LINE#         72
+  C:0D59H         LINE#         73
+  C:0D5EH         LINE#         74
+  C:0D63H         LINE#         75
+  -------         ENDPROC       GLCD_INIT
+  -------         PROC          READ_BUTTON
+  C:0D7DH         LINE#         79
+  C:0D7DH         LINE#         80
+  C:0D7FH         LINE#         81
+  C:0D81H         LINE#         83
+  C:0D84H         LINE#         84
+  C:0D86H         LINE#         85
+  C:0D89H         LINE#         86
+  C:0D89H         LINE#         88
+  C:0D8BH         LINE#         89
+  C:0D8DH         LINE#         90
+  -------         ENDPROC       READ_BUTTON
+  -------         PROC          LOAD_CUSTOM_CHAR
+  -------         DO            
+  D:001DH         SYMBOL        i
+  -------         ENDDO         
+  C:0900H         LINE#         125
+  C:0900H         LINE#         128
+  C:0905H         LINE#         129
+  C:090AH         LINE#         130
+  C:091CH         LINE#         131
+  C:092FH         LINE#         133
+  C:0934H         LINE#         134
+  C:0939H         LINE#         135
+  C:094BH         LINE#         136
+  C:095EH         LINE#         138
+  C:0963H         LINE#         139
+  C:0968H         LINE#         140
+  C:097AH         LINE#         141
+  C:098DH         LINE#         142
+  -------         ENDPROC       LOAD_CUSTOM_CHAR
+  -------         PROC          CHECK_NEW_OBSTACLE
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:0A9CH         LINE#         144
+  C:0A9CH         LINE#         147
+  C:0AA5H         LINE#         148
+  C:0AA8H         LINE#         150
+  C:0AA8H         LINE#         152
+  C:0AABH         LINE#         153
+  C:0ABBH         LINE#         154
+  C:0AC5H         LINE#         157
+  C:0ACAH         LINE#         158
+  C:0AD4H         LINE#         159
+  C:0ADEH         LINE#         160
+  C:0AE0H         LINE#         161
+  C:0AE2H         LINE#         162
+  C:0AECH         LINE#         163
+  C:0AF6H         LINE#         164
+  C:0AF9H         LINE#         165
+  C:0AF9H         LINE#         167
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  05/26/2026  22:14:57  PAGE 6
+
+
+  C:0AFCH         LINE#         168
+  C:0AFDH         LINE#         169
+  C:0AFDH         LINE#         170
+  C:0B08H         LINE#         171
+  -------         ENDPROC       CHECK_NEW_OBSTACLE
+  -------         PROC          DRAW_OBSTACLES
+  -------         DO            
+  D:0082H         SYMBOL        i
+  D:0006H         SYMBOL        linha
+  -------         ENDDO         
+  C:0B74H         LINE#         173
+  C:0B74H         LINE#         177
+  C:0B77H         LINE#         178
+  C:0B8AH         LINE#         179
+  C:0B9EH         LINE#         180
+  C:0BA4H         LINE#         183
+  C:0BA9H         LINE#         184
+  C:0BB6H         LINE#         185
+  C:0BB8H         LINE#         186
+  C:0BBAH         LINE#         187
+  C:0BBFH         LINE#         188
+  C:0BBFH         LINE#         190
+  C:0BD1H         LINE#         191
+  C:0BD1H         LINE#         192
+  C:0BD4H         LINE#         193
+  C:0BD4H         LINE#         194
+  C:0BD4H         LINE#         195
+  C:0BDDH         LINE#         196
+  -------         ENDPROC       DRAW_OBSTACLES
+  -------         PROC          UPDATE_OBSTACLES
+  -------         DO            
+  D:0082H         SYMBOL        i
+  D:0007H         SYMBOL        linha
+  -------         ENDDO         
+  C:0C2DH         LINE#         198
+  C:0C2DH         LINE#         202
+  C:0C30H         LINE#         203
+  C:0C42H         LINE#         204
+  C:0C4BH         LINE#         206
+  C:0C53H         LINE#         207
+  C:0C65H         LINE#         208
+  C:0C65H         LINE#         209
+  C:0C65H         LINE#         210
+  C:0C68H         LINE#         211
+  C:0C68H         LINE#         212
+  C:0C68H         LINE#         213
+  C:0C71H         LINE#         214
+  -------         ENDPROC       UPDATE_OBSTACLES
+  -------         PROC          _DRAW_DINO
+  D:0007H         SYMBOL        altura
+  C:0CA0H         LINE#         216
+  C:0CA0H         LINE#         217
+  C:0CAAH         LINE#         218
+  C:0CAAH         LINE#         219
+  C:0CAAH         LINE#         220
+  C:0CADH         LINE#         221
+  C:0CB2H         LINE#         222
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  05/26/2026  22:14:57  PAGE 7
+
+
+  C:0CB2H         LINE#         223
+  C:0CB2H         LINE#         224
+  C:0CB4H         LINE#         225
+  C:0CB4H         LINE#         226
+  C:0CB4H         LINE#         227
+  C:0CB4H         LINE#         228
+  C:0CB7H         LINE#         229
+  C:0CBCH         LINE#         230
+  C:0CC1H         LINE#         231
+  C:0CC6H         LINE#         232
+  C:0CCBH         LINE#         233
+  C:0CCBH         LINE#         234
+  -------         ENDPROC       _DRAW_DINO
+  -------         PROC          DRAW_STATUS
+  -------         DO            
+  D:001DH         SYMBOL        buf
+  -------         ENDDO         
+  C:0BDEH         LINE#         236
+  C:0BDEH         LINE#         240
+  C:0BF5H         LINE#         241
+  C:0C0CH         LINE#         242
+  C:0C1CH         LINE#         243
+  C:0C1FH         LINE#         245
+  C:0C24H         LINE#         246
+  -------         ENDPROC       DRAW_STATUS
+  -------         PROC          MAIN
+  -------         DO            
+  D:0019H         SYMBOL        botao_agora
+  D:001AH         SYMBOL        altura_dino
+  D:001BH         SYMBOL        tempo
+  -------         ENDDO         
+  C:0800H         LINE#         249
+  C:0800H         LINE#         250
+  C:0800H         LINE#         255
+  C:0803H         LINE#         256
+  C:0806H         LINE#         258
+  C:080BH         LINE#         259
+  C:080BH         LINE#         260
+  C:080DH         LINE#         263
+  C:0817H         LINE#         264
+  C:0822H         LINE#         265
+  C:082AH         LINE#         266
+  C:082AH         LINE#         267
+  C:082CH         LINE#         268
+  C:0834H         LINE#         269
+  C:0834H         LINE#         272
+  C:083FH         LINE#         273
+  C:0846H         LINE#         274
+  C:0851H         LINE#         275
+  C:0851H         LINE#         278
+  C:085EH         LINE#         279
+  C:0861H         LINE#         280
+  C:0863H         LINE#         281
+  C:0863H         LINE#         282
+  C:0866H         LINE#         285
+  C:0869H         LINE#         286
+  C:086CH         LINE#         288
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  05/26/2026  22:14:57  PAGE 8
+
+
+  C:0870H         LINE#         289
+  C:087AH         LINE#         290
+  C:0888H         LINE#         291
+  C:088AH         LINE#         292
+  C:0892H         LINE#         293
+  C:0892H         LINE#         295
+  C:0895H         LINE#         296
+  C:0898H         LINE#         299
+  C:08ABH         LINE#         300
+  C:08ABH         LINE#         302
+  C:08B7H         LINE#         303
+  C:08C4H         LINE#         304
+  C:08C6H         LINE#         305
+  C:08C6H         LINE#         307
+  C:08C9H         LINE#         308
+  C:08E6H         LINE#         309
+  C:08EFH         LINE#         310
+  C:08F6H         LINE#         311
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        TREX_GLCD
+
+  -------         MODULE        ?C?CLDOPTR
+  C:0A1AH         PUBLIC        ?C?CLDOPTR
+  -------         ENDMOD        ?C?CLDOPTR
+
+  -------         MODULE        ?C?UIDIV
+  C:0A47H         PUBLIC        ?C?UIDIV
+  -------         ENDMOD        ?C?UIDIV
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 048AH BYTE (56%) *
+******************************************************************************
+
+Program Size: data=41.0 xdata=0 code=1436
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

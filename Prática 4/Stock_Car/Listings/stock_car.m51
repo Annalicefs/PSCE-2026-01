@@ -1,0 +1,305 @@
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    05/27/2026  00:20:40  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0, INVOKED BY:
+D:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\car_glcd.obj TO .\Objects\stock_car PRINT (.\Listings\stock_car.m51)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\car_glcd.obj (CAR_GLCD)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C_STARTUP)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C?SCDIV)
+  D:\KEIL_V5\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  .\Objects\stock_car (CAR_GLCD)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     000AH     UNIT         _DATA_GROUP_
+            DATA    0012H     0002H     UNIT         ?DT?CAR_GLCD
+            IDATA   0014H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     07FDH                  *** GAP ***
+            CODE    0800H     00D7H     UNIT         ?PR?MAIN?CAR_GLCD
+            CODE    08D7H     008CH     UNIT         ?C_C51STARTUP
+            CODE    0963H     0080H     UNIT         ?CO?CAR_GLCD
+            CODE    09E3H     006FH     UNIT         ?PR?_DRAW_SPRITE?CAR_GLCD
+            CODE    0A52H     002FH     UNIT         ?PR?GLCD_CLEARGRAPHIC?CAR_GLCD
+            CODE    0A81H     002AH     UNIT         ?PR?_DELAY?CAR_GLCD
+            CODE    0AABH     0022H     UNIT         ?C?LIB_CODE
+            CODE    0ACDH     0021H     UNIT         ?PR?GLCD_INIT?CAR_GLCD
+            CODE    0AEEH     0018H     UNIT         ?PR?_GLCD_CHAR?CAR_GLCD
+            CODE    0B06H     0011H     UNIT         ?PR?READ_BTN_LEFT?CAR_GLCD
+            CODE    0B17H     0011H     UNIT         ?PR?READ_BTN_RIGHT?CAR_GLCD
+            CODE    0B28H     000DH     UNIT         ?PR?_GLCD_COMMAND?CAR_GLCD
+            CODE    0B35H     0007H     UNIT         ?C_INITSEG
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\stock_car (CAR_GLCD)
+
+
+SEGMENT                                  DATA_GROUP 
+  +--> CALLED SEGMENT                  START    LENGTH
+------------------------------------------------------
+?C_C51STARTUP                          -----    -----
+  +--> ?PR?MAIN?CAR_GLCD
+  +--> ?C_INITSEG
+
+?PR?MAIN?CAR_GLCD                      0008H    0005H
+  +--> ?PR?GLCD_INIT?CAR_GLCD
+  +--> ?CO?CAR_GLCD
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  05/27/2026  00:20:40  PAGE 2
+
+
+  +--> ?PR?_DRAW_SPRITE?CAR_GLCD
+  +--> ?PR?READ_BTN_LEFT?CAR_GLCD
+  +--> ?PR?READ_BTN_RIGHT?CAR_GLCD
+  +--> ?PR?_DELAY?CAR_GLCD
+  +--> ?PR?GLCD_CLEARGRAPHIC?CAR_GLCD
+
+?PR?GLCD_INIT?CAR_GLCD                 -----    -----
+  +--> ?PR?_DELAY?CAR_GLCD
+  +--> ?PR?_GLCD_COMMAND?CAR_GLCD
+
+?PR?_GLCD_COMMAND?CAR_GLCD             -----    -----
+  +--> ?PR?_DELAY?CAR_GLCD
+
+?PR?_DRAW_SPRITE?CAR_GLCD              000DH    0005H
+  +--> ?CO?CAR_GLCD
+  +--> ?PR?_GLCD_COMMAND?CAR_GLCD
+  +--> ?PR?_GLCD_CHAR?CAR_GLCD
+
+?PR?_GLCD_CHAR?CAR_GLCD                -----    -----
+  +--> ?PR?_DELAY?CAR_GLCD
+
+?PR?GLCD_CLEARGRAPHIC?CAR_GLCD         000DH    0001H
+  +--> ?PR?_GLCD_COMMAND?CAR_GLCD
+  +--> ?PR?_GLCD_CHAR?CAR_GLCD
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\stock_car (CAR_GLCD)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        CAR_GLCD
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  D:0012H         PUBLIC        counter
+  C:09C3H         PUBLIC        blank
+  C:0ACDH         PUBLIC        GLCD_Init
+  C:0A8BH         PUBLIC        _delay
+  D:0013H         PUBLIC        speed
+  C:0800H         PUBLIC        main
+  C:0963H         PUBLIC        car_player
+  C:0A52H         PUBLIC        GLCD_ClearGraphic
+  C:09A3H         PUBLIC        wall
+  C:0983H         PUBLIC        car_enemy
+  C:0B2BH         PUBLIC        _GLCD_Command
+  B:0080H.4       PUBLIC        col_right
+  C:0B17H         PUBLIC        read_btn_right
+  B:00A0H.3       PUBLIC        psb
+  B:0080H.6       PUBLIC        col_left
+  C:0B06H         PUBLIC        read_btn_left
+  B:00A0H.2       PUBLIC        en
+  B:00A0H.5       PUBLIC        rst
+  B:0080H.2       PUBLIC        row_right
+  B:00A0H.0       PUBLIC        rs
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  05/27/2026  00:20:40  PAGE 3
+
+
+  B:0080H.2       PUBLIC        row_left
+  B:00A0H.1       PUBLIC        rw
+  C:09E7H         PUBLIC        _Draw_Sprite
+  C:0AFCH         PUBLIC        _GLCD_Char
+  -------         PROC          L?0045
+  -------         ENDPROC       L?0045
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        count
+  -------         DO            
+  D:0004H         SYMBOL        i
+  D:0002H         SYMBOL        j
+  -------         ENDDO         
+  C:0A8BH         LINE#         20
+  C:0A8BH         LINE#         22
+  C:0AAAH         LINE#         23
+  -------         ENDPROC       _DELAY
+  -------         PROC          L?0047
+  -------         ENDPROC       L?0047
+  -------         PROC          _GLCD_COMMAND
+  D:0007H         SYMBOL        cmnd
+  C:0B2BH         LINE#         25
+  C:0B2BH         LINE#         26
+  C:0B2DH         LINE#         27
+  C:0B2DH         LINE#         28
+  C:0B2DH         LINE#         29
+  C:0B2DH         LINE#         30
+  C:0B30H         LINE#         31
+  C:0B32H         LINE#         32
+  -------         ENDPROC       _GLCD_COMMAND
+  -------         PROC          L?0044
+  -------         ENDPROC       L?0044
+  -------         PROC          _GLCD_CHAR
+  D:0007H         SYMBOL        dat
+  C:0AFCH         LINE#         35
+  C:0AFCH         LINE#         36
+  C:0AFEH         LINE#         37
+  C:0AFEH         LINE#         38
+  C:0AFEH         LINE#         39
+  C:0AFEH         LINE#         40
+  C:0B01H         LINE#         41
+  C:0B03H         LINE#         42
+  -------         ENDPROC       _GLCD_CHAR
+  -------         PROC          GLCD_CLEARGRAPHIC
+  -------         DO            
+  D:0001H         SYMBOL        y
+  D:000DH         SYMBOL        x
+  -------         ENDDO         
+  C:0A52H         LINE#         45
+  C:0A52H         LINE#         47
+  C:0A57H         LINE#         49
+  C:0A59H         LINE#         50
+  C:0A5DH         LINE#         51
+  C:0A62H         LINE#         52
+  C:0A65H         LINE#         53
+  C:0A6AH         LINE#         54
+  C:0A6FH         LINE#         55
+  C:0A78H         LINE#         56
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  05/27/2026  00:20:40  PAGE 4
+
+
+  C:0A7CH         LINE#         57
+  -------         ENDPROC       GLCD_CLEARGRAPHIC
+  -------         PROC          GLCD_INIT
+  C:0ACDH         LINE#         60
+  C:0ACDH         LINE#         61
+  C:0ACFH         LINE#         62
+  C:0AD1H         LINE#         63
+  C:0AD8H         LINE#         64
+  C:0ADAH         LINE#         65
+  C:0ADFH         LINE#         66
+  C:0AE4H         LINE#         67
+  C:0AE9H         LINE#         68
+  -------         ENDPROC       GLCD_INIT
+  -------         PROC          READ_BTN_LEFT
+  C:0B06H         LINE#         98
+  C:0B06H         LINE#         99
+  C:0B08H         LINE#         100
+  C:0B0AH         LINE#         102
+  C:0B0DH         LINE#         103
+  C:0B0FH         LINE#         104
+  C:0B12H         LINE#         105
+  C:0B12H         LINE#         106
+  C:0B14H         LINE#         107
+  C:0B16H         LINE#         108
+  -------         ENDPROC       READ_BTN_LEFT
+  -------         PROC          READ_BTN_RIGHT
+  C:0B17H         LINE#         110
+  C:0B17H         LINE#         111
+  C:0B19H         LINE#         112
+  C:0B1BH         LINE#         114
+  C:0B1EH         LINE#         115
+  C:0B20H         LINE#         116
+  C:0B23H         LINE#         117
+  C:0B23H         LINE#         118
+  C:0B25H         LINE#         119
+  C:0B27H         LINE#         120
+  -------         ENDPROC       READ_BTN_RIGHT
+  -------         PROC          L?0046
+  -------         ENDPROC       L?0046
+  -------         PROC          _DRAW_SPRITE
+  D:000DH         SYMBOL        lane
+  D:000EH         SYMBOL        y
+  D:000FH         SYMBOL        sprite
+  -------         DO            
+  D:0001H         SYMBOL        i
+  -------         DO            
+  D:0011H         SYMBOL        draw_y
+  -------         ENDDO         
+  -------         ENDDO         
+  C:09E7H         LINE#         122
+  C:09EFH         LINE#         124
+  C:09F4H         LINE#         126
+  C:09F6H         LINE#         127
+  C:09FBH         LINE#         128
+  C:0A02H         LINE#         130
+  C:0A0DH         LINE#         131
+  C:0A10H         LINE#         132
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  05/27/2026  00:20:40  PAGE 5
+
+
+  C:0A14H         LINE#         133
+  C:0A16H         LINE#         134
+  C:0A1EH         LINE#         135
+  C:0A26H         LINE#         136
+  C:0A26H         LINE#         138
+  C:0A35H         LINE#         139
+  C:0A4BH         LINE#         140
+  C:0A51H         LINE#         141
+  -------         ENDPROC       _DRAW_SPRITE
+  -------         PROC          MAIN
+  -------         DO            
+  D:0008H         SYMBOL        p_lane
+  D:0009H         SYMBOL        e_lane
+  D:000AH         SYMBOL        e_y
+  D:000BH         SYMBOL        i
+  -------         ENDDO         
+  C:0800H         LINE#         143
+  C:0800H         LINE#         144
+  C:0803H         LINE#         145
+  C:0806H         LINE#         146
+  C:0809H         LINE#         149
+  C:080CH         LINE#         152
+  C:081EH         LINE#         153
+  C:0829H         LINE#         154
+  C:0834H         LINE#         155
+  C:0841H         LINE#         157
+  C:0841H         LINE#         158
+  C:0843H         LINE#         161
+  C:084AH         LINE#         162
+  C:0851H         LINE#         165
+  C:0862H         LINE#         166
+  C:0873H         LINE#         169
+  C:0877H         LINE#         171
+  C:0880H         LINE#         172
+  C:0883H         LINE#         173
+  C:0891H         LINE#         174
+  C:0891H         LINE#         176
+  C:089CH         LINE#         177
+  C:08A7H         LINE#         180
+  C:08BEH         LINE#         181
+  C:08C5H         LINE#         182
+  C:08C8H         LINE#         183
+  C:08CAH         LINE#         184
+  C:08CAH         LINE#         186
+  C:08D4H         LINE#         187
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        CAR_GLCD
+
+  -------         MODULE        ?C?SCDIV
+  C:0AABH         PUBLIC        ?C?SCDIV
+  -------         ENDMOD        ?C?SCDIV
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 028DH BYTE (31%) *
+******************************************************************************
+
+Program Size: data=21.0 xdata=0 code=831
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  05/27/2026  00:20:40  PAGE 6
+
+
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

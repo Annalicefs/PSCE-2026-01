@@ -1,0 +1,390 @@
+C51 COMPILER V9.60.7.0   TREX_LCD                                                          05/26/2026 21:57:46 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE TREX_LCD
+OBJECT MODULE PLACED IN .\Objects\tRex_LCD.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\..\..\..\pratica4-20260517T191259Z-3-001\pratica4\Objects\tRex_LCD.c 
+                    -OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\tRex_LCD.lst) TABS(2) OBJECT(.\Objects\tRex_LCD.obj)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          
+   3          sfr LCD_Port = 0x90;        /* P1 port as data port */
+   4          sbit rs = P1^3;             /* Register select pin */
+   5          sbit rw = P1^1;             /* Read/Write pin */
+   6          sbit en = P1^2;             /* Enable pin */
+   7          sbit row_button = P0^2;
+   8          sbit col_button = P0^5;
+   9          
+  10          char pulo = 0;
+  11          char fase_pulo = 0;
+  12          char botao_anterior = 0;
+  13          char counter = 0;
+  14          char proximo_obstaculo = 0; /* 0 = Cacto, 1 = Passaro */
+  15          
+  16          unsigned int score = 0;
+  17          unsigned int prox_fase_vel = 50; 
+  18          char velocidade = 20;
+  19          
+  20          
+  21          /* Function to provide delay Approx 1ms with 11.0592 Mhz crystal */
+  22          void delay(unsigned int count)
+  23          {
+  24   1          int i, j;
+  25   1          for(i=0; i<count; i++)
+  26   1              for(j=0; j<112; j++);
+  27   1      }
+  28          
+  29          /* LCD16x2 command function */
+  30          void LCD_Command(char cmnd) 
+  31          {
+  32   1          LCD_Port = (LCD_Port & 0x0F) | (cmnd & 0xF0); /* Send upper nibble */
+  33   1          rs = 0;                 /* Command reg. */
+  34   1          rw = 0;                 /* Write operation */
+  35   1          en = 1;                 /* Enable pulse */
+  36   1          delay(1);
+  37   1          en = 0;
+  38   1          delay(2);
+  39   1          LCD_Port = (LCD_Port & 0x0F) | (cmnd << 4);   /* Send lower nibble */
+  40   1          en = 1;                 /* Enable pulse */
+  41   1          delay(1);
+  42   1          en = 0;
+  43   1          delay(5);
+  44   1      
+  45   1      }
+  46          
+  47          /* LCD data write function */
+  48          void LCD_Char(char char_data) 
+  49          {
+  50   1          LCD_Port = (LCD_Port & 0x0F) | (char_data & 0xF0); /* Send upper nibble */
+  51   1          rs = 1;                 /* Data reg. */
+  52   1          rw = 0;                 /* Write operation */
+  53   1          en = 1;                 /* Enable pulse */
+  54   1          delay(1);
+C51 COMPILER V9.60.7.0   TREX_LCD                                                          05/26/2026 21:57:46 PAGE 2   
+
+  55   1          en = 0;
+  56   1          delay(2);
+  57   1          LCD_Port = (LCD_Port & 0x0F) | (char_data << 4);   /* Send lower nibble */
+  58   1          en = 1;                 /* Enable pulse */
+  59   1          delay(1);
+  60   1          en = 0;
+  61   1          delay(5);
+  62   1      
+  63   1      }
+  64          
+  65          /* Send string to LCD function */
+  66          void LCD_String(char *str) 
+  67          {
+  68   1          int i;
+  69   1          for(i=0; str[i]!=0; i++) /* Send each char of string till the NULL */
+  70   1          {
+  71   2              LCD_Char(str[i]);    /* Call LCD data write */
+  72   2          }
+  73   1      }
+  74          
+  75          /* Send string to LCD function based on X,Y position */
+  76          void LCD_String_xy(char row, char pos, char *str) 
+  77          {
+  78   1          if (row == 0)
+  79   1              LCD_Command((pos & 0x0F) | 0x80);
+  80   1          else if (row == 1)
+  81   1              LCD_Command((pos & 0x0F) | 0xC0);
+  82   1          
+  83   1          LCD_String(str);         /* Call LCD string function */
+  84   1      }
+  85          
+  86          /* LCD Initialize function */
+  87          void LCD_Init(void) 
+  88          {
+  89   1          delay(20);               /* LCD Power ON Initialization time >15ms */
+  90   1          LCD_Command(0x02);       /* 4bit mode */
+  91   1          LCD_Command(0x28);       /* Initialization of 16X2 LCD in 4bit mode */
+  92   1          LCD_Command(0x0C);       /* Display ON Cursor OFF */
+  93   1          LCD_Command(0x06);       /* Auto Increment cursor */
+  94   1          LCD_Command(0x01);       /* Clear display */
+  95   1          LCD_Command(0x80);       /* Cursor at home position */
+  96   1      }
+  97          
+  98          //CÓDIGO DO JOGO T-REX
+  99          char read_button() {
+ 100   1          col_button = 1; 
+ 101   1          row_button = 0;
+ 102   1          
+ 103   1          if(col_button == 0) {
+ 104   2              //delay(20);
+ 105   2              if(col_button == 0) {
+ 106   3                  return 1;
+ 107   3              }
+ 108   2          }
+ 109   1          return 0;
+ 110   1      }
+ 111          
+ 112          // Personagem
+ 113          unsigned char dinossauro[8] = {
+ 114              0x04, // 0b00100
+ 115              0x0A, // 0b01010
+ 116              0x04, // 0b00100
+C51 COMPILER V9.60.7.0   TREX_LCD                                                          05/26/2026 21:57:46 PAGE 3   
+
+ 117              0x1F, // 0b11111
+ 118              0x04, // 0b00100
+ 119              0x04, // 0b00100
+ 120              0x0A, // 0b01010
+ 121              0x11  // 0b10001
+ 122          };
+ 123          
+ 124          // Cacto
+ 125          unsigned char cacto[8] = {
+ 126              0x04, // 0b00100
+ 127              0x05, // 0b00101
+ 128              0x15, // 0b10101
+ 129              0x17, // 0b10111
+ 130              0x1C, // 0b11100
+ 131              0x04, // 0b00100
+ 132              0x04, // 0b00100
+ 133              0x04  // 0b00100
+ 134          };
+ 135          
+ 136          // Passaro
+ 137          unsigned char ave[8] = {
+ 138              0x00, // 0b00000
+ 139              0x01, // 0b00001
+ 140              0x02, // 0b00010
+ 141              0x12, // 0b10010
+ 142              0x1F, // 0b11111
+ 143              0x00, // 0b00000
+ 144              0x00, // 0b00000
+ 145              0x00  // 0b00000
+ 146          };
+ 147          
+ 148          struct obstaculo{
+ 149            signed char x;
+ 150            char tipo;
+ 151            char altura;
+ 152          };
+ 153          
+ 154          struct obstaculo obstaculos[2] = {
+ 155              {-1, 0, 1}, 
+ 156              {-1, 0, 1}
+ 157          };
+ 158          char distancia_minima = 0;
+ 159          
+ 160          void load_custom_char()
+ 161          { 
+ 162   1          int i;
+ 163   1        
+ 164   1          LCD_Command(0x40);
+ 165   1          for (i = 0; i < 8; i++){
+ 166   2              LCD_Char(dinossauro[i]);
+ 167   2          }
+ 168   1          
+ 169   1          LCD_Command(0x48); 
+ 170   1          for (i = 0; i < 8; i++){ 
+ 171   2            LCD_Char(cacto[i]);
+ 172   2          }
+ 173   1          
+ 174   1          LCD_Command(0x50); 
+ 175   1          for (i = 0; i < 8; i++){ 
+ 176   2            LCD_Char(ave[i]);
+ 177   2          }
+ 178   1      }
+C51 COMPILER V9.60.7.0   TREX_LCD                                                          05/26/2026 21:57:46 PAGE 4   
+
+ 179          
+ 180          void check_new_obstacle() {
+ 181   1          int i;
+ 182   1          if(distancia_minima > 0) {
+ 183   2              distancia_minima--;
+ 184   2              return;
+ 185   2          }
+ 186   1      
+ 187   1          for(i = 0; i < 2; i++) {
+ 188   2              if(obstaculos[i].x < 0) { 
+ 189   3                  obstaculos[i].x = 15; 
+ 190   3                  
+ 191   3                  // Alterna entre cacto e ave
+ 192   3                  if(proximo_obstaculo == 1) {
+ 193   4                      obstaculos[i].tipo = 1;   // ave
+ 194   4                      obstaculos[i].altura = 0; 
+ 195   4                      proximo_obstaculo = 0;    
+ 196   4                  } else {
+ 197   4                      obstaculos[i].tipo = 0;   // cacto
+ 198   4                      obstaculos[i].altura = 1;
+ 199   4                      proximo_obstaculo = 1;    
+ 200   4                  }
+ 201   3                  
+ 202   3                  distancia_minima = 5; 
+ 203   3                  break;
+ 204   3              }
+ 205   2          }
+ 206   1      }
+ 207          
+ 208          void draw_obstacles() {
+ 209   1          int i; char linha;
+ 210   1          for(i = 0; i < 2; i++) {
+ 211   2              if(obstaculos[i].x >= 0) {
+ 212   3                  linha = (obstaculos[i].altura == 1) ? 0xC0 : 0x80;
+ 213   3                  
+ 214   3                  LCD_Command(linha + obstaculos[i].x);
+ 215   3                  
+ 216   3                  //desenha obstáculo
+ 217   3                  if(obstaculos[i].tipo == 0){
+ 218   4                    LCD_Char(1); 
+ 219   4                  } else {
+ 220   4                    LCD_Char(2);
+ 221   4                  }
+ 222   3                  
+ 223   3                  if(obstaculos[i].x < 15){
+ 224   4                    LCD_Char(' '); 
+ 225   4                  }
+ 226   3              }
+ 227   2          }
+ 228   1      }
+ 229          
+ 230          void update_obstacles() {
+ 231   1          int i; char linha;
+ 232   1          for(i = 0; i < 2; i++) {
+ 233   2              if(obstaculos[i].x >= 0) { 
+ 234   3                  obstaculos[i].x--; 
+ 235   3                  
+ 236   3                  if(obstaculos[i].x < 0) {
+ 237   4                      linha = (obstaculos[i].altura == 1) ? 0xC0 : 0x80;
+ 238   4                      LCD_Command(linha); 
+ 239   4                      LCD_Char(' '); 
+ 240   4                  }
+C51 COMPILER V9.60.7.0   TREX_LCD                                                          05/26/2026 21:57:46 PAGE 5   
+
+ 241   3              }
+ 242   2          }
+ 243   1      }
+ 244          
+ 245          void draw_dino(char altura) {
+ 246   1          if(altura > 0) { 
+ 247   2              LCD_String_xy(1, 0, " "); 
+ 248   2              LCD_Command(0x80);      
+ 249   2              LCD_Char(0);             
+ 250   2          } 
+ 251   1          else { 
+ 252   2              LCD_String_xy(0, 0, " "); 
+ 253   2              LCD_Command(0xC0);       
+ 254   2              LCD_Char(0);            
+ 255   2          }
+ 256   1      }
+ 257          
+ 258          void draw_status() {
+ 259   1          char buf[6];
+ 260   1          
+ 261   1          //converte o numero do score em caracteres
+ 262   1          buf[0] = (score / 100) % 10 + '0';
+ 263   1          buf[1] = (score / 10) % 10 + '0';
+ 264   1          buf[2] = (score % 10) + '0';
+ 265   1          buf[3] = '\0';
+ 266   1      
+ 267   1          LCD_Command(0x8A);
+ 268   1          LCD_String(buf);
+ 269   1      }
+ 270          
+ 271          char start() {
+ 272   1          col_button = 1;   
+ 273   1          row_button = 0; 
+ 274   1      
+ 275   1          if(col_button == 0 && row_button == 0) {
+ 276   2              delay(20);
+ 277   2              if(col_button == 0 && row_button == 0) {
+ 278   3                  return 1;
+ 279   3              }
+ 280   2          }
+ 281   1          return 0;
+ 282   1      }
+ 283          
+ 284          void main()
+ 285          {
+ 286   1          char botao_agora = 0;
+ 287   1          char altura_dino;
+ 288   1          int tempo;
+ 289   1        
+ 290   1          LCD_Init();            
+ 291   1          load_custom_char();
+ 292   1          
+ 293   1          while(start() == 0);
+ 294   1              delay(200); 
+ 295   1              LCD_Command(0x01);
+ 296   1              draw_dino(0);
+ 297   1        
+ 298   1          while(1) {
+ 299   2              counter++;
+ 300   2              
+ 301   2              //pontuação e punição
+ 302   2              if(botao_agora == 1 && botao_anterior == 1) {
+C51 COMPILER V9.60.7.0   TREX_LCD                                                          05/26/2026 21:57:46 PAGE 6   
+
+ 303   3                  if(score > 0){
+ 304   4                    score--;
+ 305   4                  }
+ 306   3              } else {
+ 307   3                  score++;
+ 308   3              }
+ 309   2              
+ 310   2              //velocidade
+ 311   2              if(score >= prox_fase_vel) {
+ 312   3                  velocidade = velocidade / 2; 
+ 313   3                  prox_fase_vel = prox_fase_vel + 50; 
+ 314   3              }
+ 315   2      
+ 316   2              //pulo
+ 317   2              if(botao_agora == 1 && botao_anterior == 0 && pulo == 0) { 
+ 318   3                  pulo = 1; 
+ 319   3                  fase_pulo = 0; 
+ 320   3              }
+ 321   2              botao_anterior = botao_agora; 
+ 322   2              
+ 323   2              //movimentação
+ 324   2              check_new_obstacle();
+ 325   2              update_obstacles();
+ 326   2              
+ 327   2              if(pulo) {
+ 328   3                  draw_dino(1); altura_dino = 0; fase_pulo++;
+ 329   3                  if(fase_pulo > 4) { pulo = 0; fase_pulo = 0; }
+ 330   3              } else {
+ 331   3                  draw_dino(0); altura_dino = 1;
+ 332   3              }
+ 333   2                     
+ 334   2              draw_obstacles();
+ 335   2              draw_status(); 
+ 336   2              
+ 337   2              //colisão
+ 338   2              if ((obstaculos[0].x == 0 && obstaculos[0].altura == altura_dino) || 
+ 339   2                  (obstaculos[1].x == 0 && obstaculos[1].altura == altura_dino)) {
+ 340   3                  
+ 341   3                  delay(200); LCD_Command(0x01); 
+ 342   3                  LCD_String_xy(0, 3, "GAME OVER!"); 
+ 343   3                  while(1);
+ 344   3              }
+ 345   2              
+ 346   2              botao_agora = 0; 
+ 347   2              for(tempo = 0; tempo < velocidade; tempo++) {
+ 348   3                  if(read_button() == 1) botao_agora = 1; 
+ 349   3                  delay(10);
+ 350   3              }
+ 351   2          }
+ 352   1      }
+ 353          
+ 354          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1038    ----
+   CONSTANT SIZE    =     13    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     41      20
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V9.60.7.0   TREX_LCD                                                          05/26/2026 21:57:46 PAGE 7   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

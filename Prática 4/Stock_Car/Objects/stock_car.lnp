@@ -1,0 +1,3 @@
+".\Objects\car_glcd.obj" 
+TO ".\Objects\stock_car" 
+PRINT(".\Listings\stock_car.m51")
